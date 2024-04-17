@@ -1,13 +1,14 @@
 ﻿@page "/add-student"
-@using StudentsManagement.Client.Services
+@page "/student/edit/{id}"
+@rendermode InteractiveServer
 @using StudentsManagement.Shared.Models
 @inject NavigationManager navigation
 
-<h3>Add New Student</h3>
+<h3>@FormTitle</h3>
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <EditForm Model="StudentObj" OnValidSubmit="CreateStudent" FormName="addstudent">
+        <EditForm Model="StudentObj" OnValidSubmit="HandleSave">
             <DataAnnotationsValidator/>
             <ValidationSummary/>
 
@@ -16,49 +17,49 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">First Name</label>
-                            <InputText for ="First Name" class="form-control" @bind-Value=@StudentObj.FirstName/>
+                            <InputText for ="First Name" autocomplete="off" class="form-control" @bind-Value=@StudentObj.FirstName/>
                             <ValidationMessage For="()=>StudentObj.FirstName"/>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Middle Name</label>
-                            <InputText for="Middle Name" class="form-control" @bind-Value=@StudentObj.MiddleName />
+                            <InputText for="Middle Name" autocomplete="off" class="form-control" @bind-Value=@StudentObj.MiddleName />
                             <ValidationMessage For="()=>StudentObj.MiddleName" />
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Last Name</label>
-                            <InputText for="Last Name" class="form-control" @bind-Value=@StudentObj.LastName />
+                            <InputText for="Last Name" autocomplete="off" class="form-control" @bind-Value=@StudentObj.LastName />
                             <ValidationMessage For="()=>StudentObj.LastName" />
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Phone</label>
-                            <InputText for="Phone" class="form-control" @bind-Value=@StudentObj.PhoneNumber />
+                            <InputText for="Phone" autocomplete="off" class="form-control" @bind-Value=@StudentObj.PhoneNumber />
                             <ValidationMessage For="()=>StudentObj.PhoneNumber" />
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Email</label>
-                            <InputText for="Email" class="form-control" @bind-Value=@StudentObj.EmailAddress />
+                            <InputText for="Email" autocomplete="off" class="form-control" @bind-Value=@StudentObj.EmailAddress />
                             <ValidationMessage For="()=>StudentObj.EmailAddress" />
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Address</label>
-                            <InputText for="Address" class="form-control" @bind-Value=@StudentObj.Address />
+                            <InputText for="Address" autocomplete="off" class="form-control" @bind-Value=@StudentObj.Address />
                             <ValidationMessage For="()=>StudentObj.Address" />
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Country</label>
-                            <InputText for="Country" class="form-control" @bind-Value=@StudentObj.Country />
+                            <InputText for="Country" autocomplete="off" class="form-control" @bind-Value=@StudentObj.Country />
                             <ValidationMessage For="()=>StudentObj.Country" />
                         </div>
                     </div>
@@ -74,12 +75,51 @@
 </div>
 
 @code {
-    [SupplyParameterFromForm]
+
     public Student StudentObj { get; set; } = new();
 
-    protected async Task CreateStudent()
+    [Parameter] public string Id { get; set; } = string.Empty;
+
+    public string FormTitle { get; set; } = string.Empty;
+
+
+    private async Task HandleSave()
     {
-        var result = await StudentService.AddStudentAsync(StudentObj);
-        navigation.NavigateTo("/students-list");
+        if (StudentObj.Id == Guid.Empty)
+        {
+            var result = await StudentService.AddStudentAsync(StudentObj);
+            if (result != null)
+                navigation.NavigateTo("/students-list");
+        }
+        else
+        {
+            var results = await StudentService.UpdateStudentAsync(StudentObj);
+            if (results != null)
+                navigation.NavigateTo("/students-list");
+        }
     }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            var _Id = new Guid(Id); // hapa ni very tricky, if the conversion from string to Guid is not done it becomes a big fuckin mess!
+
+            var student = await StudentService.GetStudentByIdAsync(_Id);
+            if (student != null)
+                StudentObj = student;
+            FormTitle = "Edit Student";
+        }
+        else
+        {
+            FormTitle = "Add Student";
+        }
+
+    }
+
+    // protected async Task CreateStudent()
+    // {
+    //     var result = await StudentService.AddStudentAsync(StudentObj);
+    //     navigation.NavigateTo("/students-list");
+    // }
 }

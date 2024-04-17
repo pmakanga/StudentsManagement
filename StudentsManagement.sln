@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentsManagement", "StudentsManagement\StudentsManagement\StudentsManagement.csproj", "{438AE6E3-10F0-47B2-8AE3-212E0B321496}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentsManagement", "StudentsManagement\StudentsManagement\StudentsManagement.csproj", "{438AE6E3-10F0-47B2-8AE3-212E0B321496}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentsManagement.Client", "StudentsManagement\StudentsManagement.Client\StudentsManagement.Client.csproj", "{08C6CAC1-36F7-4D48-876E-396C17BCF3FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentsManagement.Client", "StudentsManagement\StudentsManagement.Client\StudentsManagement.Client.csproj", "{08C6CAC1-36F7-4D48-876E-396C17BCF3FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentsManagement.Shared", "StudentManagement.Shared\StudentsManagement.Shared.csproj", "{21A0C7C3-2525-4A82-BE02-66749E890998}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StudentsManagement.Shared", "StudentManagement.Shared\StudentsManagement.Shared.csproj", "{21A0C7C3-2525-4A82-BE02-66749E890998}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
