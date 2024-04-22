@@ -45,6 +45,9 @@ builder.Services.AddScoped(http => new HttpClient
 });
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+builder.Services.AddScoped<ISystemCodeRepository, SystemCodeRepository>();
+builder.Services.AddScoped<ISystemCodeDetailRepository, SystemCodeDetailRepository>();
 
 var app = builder.Build();
 

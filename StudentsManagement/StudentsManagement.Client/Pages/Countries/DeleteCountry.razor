@@ -1,0 +1,47 @@
+﻿@page "/country/delete/{id}"
+@rendermode InteractiveServer
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation
+
+<h3>Delete Student</h3>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <tr>
+                <th>Code</th>
+                <td>@CountryObj.Code</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>@CountryObj.Name</td>
+            </tr>
+        </table>
+    </div>
+    <div class="form-group mt-4">
+        <button type="submit" class="btn btn-primary" @onclick="Delete">Delete</button>
+        <a class="btn btn-danger " href="countries-list"><i class="oi oi-plus"></i>Back</a>
+    </div>
+</div>
+
+@code {
+    public Country CountryObj { get; set; } = new();
+    [Parameter] public string Id { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var _Id = new Guid(Id);
+
+        var country = await CountryService.GetCountryByIdAsync(_Id);
+        if (country != null)
+            CountryObj = country;
+
+    }
+
+    private async Task Delete()
+    {
+        var _Id = new Guid(Id);
+        await CountryService.DeleteCountryAsync(_Id);
+        navigation.NavigateTo("/countries-list");
+    }
+}

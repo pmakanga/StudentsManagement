@@ -20,9 +20,15 @@ namespace StudentsManagement.Data
             builder.Entity<IdentityUserToken<string>>().ToTable("tb_UserTokens");
 
             builder.Entity<Student>().ToTable("tb_Students");
+            builder.Entity<Country>().ToTable("tb_Countries");
+            builder.Entity<SystemCode>().ToTable("tb_SystemCodes");
+            builder.Entity<SystemCodeDetail>().ToTable("tb_SystemCodeDetails");
 
         }
 
         public DbSet<Student> Students { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<SystemCode>SystemCodes { get; set; }
+        public DbSet<SystemCodeDetail>SystemCodeDetails {  get; set; }
     }
 }

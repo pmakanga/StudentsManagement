@@ -59,7 +59,13 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Country</label>
-                            <InputText for="Country" autocomplete="off" class="form-control" @bind-Value=@StudentObj.Country />
+                            <InputSelect for="Country" autocomplete="off" class="form-control" @bind-Value=@StudentObj.Country>
+                                <option value="">Select Country</option>
+                                @foreach (var country in Countries)
+                                {
+                                    <option value="@country.Name">@country.Name</option>
+                                }
+                            </InputSelect>
                             <ValidationMessage For="()=>StudentObj.Country" />
                         </div>
                     </div>
@@ -81,6 +87,8 @@
     [Parameter] public string Id { get; set; } = string.Empty;
 
     public string FormTitle { get; set; } = string.Empty;
+
+    List<Country> Countries= new List<Country>();
 
 
     private async Task HandleSave()
@@ -117,9 +125,9 @@
 
     }
 
-    // protected async Task CreateStudent()
-    // {
-    //     var result = await StudentService.AddStudentAsync(StudentObj);
-    //     navigation.NavigateTo("/students-list");
-    // }
+    protected override async Task OnInitializedAsync()
+    {
+        Countries = await CountryService.GetAllCountriesAsync();
+    }
+
 }

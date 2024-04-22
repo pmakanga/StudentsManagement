@@ -1,0 +1,82 @@
+﻿@page "/add-systemcodedetails"
+@page "/systemcodedetails/edit/{id:int}"
+@rendermode InteractiveServer
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation
+
+<h3>@FormTitle</h3>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <EditForm Model="SystemCodeDetailObj" OnValidSubmit="HandleSave">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Code</label>
+                            <InputText for="Code" autocomplete="off" class="form-control" @bind-Value=@SystemCodeDetailObj.Code />
+                            <ValidationMessage For="()=>SystemCodeDetailObj.Code" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Description</label>
+                            <InputText for="Description" autocomplete="off" class="form-control" @bind-Value=@SystemCodeDetailObj.Description />
+                            <ValidationMessage For="()=>SystemCodeDetailObj.Description" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a class="btn btn-danger " href="systemcodedetails-list"><i class="oi oi-plus"></i>Back</a>
+                </div>
+
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    public SystemCodeDetail SystemCodeDetailObj { get; set; } = new();
+
+    public string FormTitle { get; set; } = string.Empty;
+
+    [Parameter] public int Id { get; set; }
+
+    private async Task HandleSave()
+    {
+        if (SystemCodeDetailObj.Id == null)
+        {
+            var result = await SystemCodeDetailsService.AddSystemCodeDetailAsync(SystemCodeDetailObj);
+            if (result != null)
+                navigation.NavigateTo("/systemcodedetails-list");
+        }
+        else
+        {
+            var results = await SystemCodeDetailsService.UpdateSystemCodeDetailAsync(SystemCodeDetailObj);
+            if (results != null)
+                navigation.NavigateTo("/systemcodedetails-list");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != 0)
+        {
+
+            var systemCodeDetail = await SystemCodeDetailsService.GetSystemCodeDetailByIdAsync(Id);
+            if (systemCodeDetail != null)
+                SystemCodeDetailObj = systemCodeDetail;
+            FormTitle = "Edit System Code Details";
+        }
+        else
+        {
+            FormTitle = "Add System Code Details";
+        }
+    }
+
+}

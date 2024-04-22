@@ -1,0 +1,77 @@
+﻿@using StudentsManagement.Client.Services
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation
+
+@page "/systemcodes-list"
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">System Codes List</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <p><a class="btn btn-success float-end" href="/add-systemcode"> Add New System Codes </a></p>
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header"></div>
+                            @if (SystemCodes!.Any())
+                            {
+                                <div class="card-body">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Code</th>
+                                                <th>Description</th>
+                                                <th>Edit</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var systemcode in SystemCodes!)
+                                            {
+                                                <tr>
+                                                    <td>@systemcode.Code</td>
+                                                    <td>@systemcode.Description</td>
+                                                    <td>
+                                                        <a class="btn btn-success" href="/systemcode/edit/@systemcode.Id"> Edit </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info"> There is no System Codes List Availlable</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<SystemCode> SystemCodes = new List<SystemCode>();
+
+    private async Task LoadAllSystemCodes()
+    {
+        var systemcodes = await SystemCodeService.GetAllSystemCodesAsync();
+        SystemCodes!.Clear();
+        if (systemcodes is null) return;
+
+        foreach (var systemCode in systemcodes)
+        {
+            SystemCodes.Add(systemCode);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAllSystemCodes();
+    }
+}

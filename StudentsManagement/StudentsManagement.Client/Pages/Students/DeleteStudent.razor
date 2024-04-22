@@ -1,0 +1,68 @@
+﻿@page "/student/delete/{id}"
+@rendermode InteractiveServer
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation
+
+<h3>Delete Student</h3>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <tr>
+                <th>First Name</th>
+                <td>@StudentObj.FirstName</td>
+            </tr>
+            <tr>
+                <th>Middle Name</th>
+                <td>@StudentObj.MiddleName</td>
+            </tr>
+            <tr>
+                <th>Last Name</th>
+                <td>@StudentObj.LastName</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>@StudentObj.EmailAddress</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>@StudentObj.Address</td>
+            </tr>
+            <tr>
+                <th>PhoneNo</th>
+                <td>@StudentObj.PhoneNumber</td>
+            </tr>
+            <tr>
+                <th>Country</th>
+                <td>@StudentObj.Country</td>
+            </tr>
+        </table>
+    </div>
+    <div class="form-group mt-4">
+        <button type="submit" class="btn btn-primary" @onclick="Delete">Delete</button>
+        <a class="btn btn-danger " href="students-list"><i class="oi oi-plus"></i>Back</a>
+    </div>
+</div>
+@code {
+
+    public Student StudentObj { get; set; } = new();
+
+    [Parameter] public string Id { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var _Id = new Guid(Id); // hapa ni very tricky, if the conversion from string to Guid is not done it becomes a big fuckin mess!
+
+        var student = await StudentService.GetStudentByIdAsync(_Id);
+        if (student != null)
+            StudentObj = student;
+
+    }
+
+    private async Task Delete()
+    {
+        var _Id = new Guid(Id);
+        await StudentService.DeleteStudentAsync(_Id);
+        navigation.NavigateTo("/students-list");
+    }
+}
