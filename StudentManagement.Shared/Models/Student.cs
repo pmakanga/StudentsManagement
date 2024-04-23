@@ -6,6 +6,9 @@ namespace StudentsManagement.Shared.Models
     {
         [Key]
         public Guid Id { get; set; }
+
+        [Required]
+        public string? StudentNo { get; set; }
         [Required]
         public string? FirstName { get; set; }
         [Required]
@@ -20,5 +23,8 @@ namespace StudentsManagement.Shared.Models
         public string? PhoneNumber { get; set; }
         [Required]
         public string? Country { get; set; }
+
+        [Required]
+        public string? Gender { get; set; }
     }
 }

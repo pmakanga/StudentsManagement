@@ -16,6 +16,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label class="control-label">Student Number</label>
+                            <InputText for="Student Number" autocomplete="off" class="form-control" @bind-Value=@StudentObj.StudentNo />
+                            <ValidationMessage For="()=>StudentObj.StudentNo" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
                             <label class="control-label">First Name</label>
                             <InputText for ="First Name" autocomplete="off" class="form-control" @bind-Value=@StudentObj.FirstName/>
                             <ValidationMessage For="()=>StudentObj.FirstName"/>
@@ -69,6 +76,22 @@
                             <ValidationMessage For="()=>StudentObj.Country" />
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Gender</label>
+                            <InputSelect for="GenderId" class="form-control" @bind-Value="@StudentObj.Gender">
+                                <option value="">Select Gender</option>
+                                @if (Gender != null && Gender.Any())
+                                {
+                                    @foreach (var sex in Gender)
+                                    {
+                                        <option value="@sex.Id">@sex.Description</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="()=>StudentObj.Gender" />
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group mt-4">
                     <button type="submit" class="btn btn-primary">Save</button>
@@ -89,6 +112,8 @@
     public string FormTitle { get; set; } = string.Empty;
 
     List<Country> Countries= new List<Country>();
+
+    List<SystemCodeDetail> Gender = new List<SystemCodeDetail>();
 
 
     private async Task HandleSave()
@@ -128,6 +153,7 @@
     protected override async Task OnInitializedAsync()
     {
         Countries = await CountryService.GetAllCountriesAsync();
+        Gender = await SystemCodeDetailsService.GetSystemCodeDetailByCodeAsync("Gender");
     }
 
 }

@@ -13,5 +13,6 @@ namespace StudentsManagement.Shared.StudentsRepository
         Task<SystemCodeDetail> UpdateSystemCodeDetailAsync(SystemCodeDetail systemCodeDetail);
         Task<List<SystemCodeDetail>> GetAllSystemCodeDetailsAsync();
         Task<SystemCodeDetail> GetSystemCodeDetailByIdAsync(int systemCodeDetailId);
+        Task<List<SystemCodeDetail>> GetSystemCodeDetailByCodeAsync(string code);
     }
 }

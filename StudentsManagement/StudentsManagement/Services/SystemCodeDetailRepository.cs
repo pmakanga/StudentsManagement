@@ -22,8 +22,21 @@ namespace StudentsManagement.Services
 
         public async Task<List<SystemCodeDetail>> GetAllSystemCodeDetailsAsync()
         {
-            var systemcodeDetails = await _dbContext.SystemCodeDetails.ToListAsync();
+            var systemcodeDetails = await _dbContext.SystemCodeDetails
+                .Include(x => x.SystemCode)
+                .ToListAsync();
             return systemcodeDetails;
+        }
+
+        public async Task<List<SystemCodeDetail>> GetSystemCodeDetailByCodeAsync(string code)
+        {
+            var data = await _dbContext.SystemCodeDetails
+                .Include(x => x.SystemCode)
+                .Where(x => x.SystemCode!.Code == code)
+                .ToListAsync();
+            if (data == null) throw new ArgumentException();
+
+            return data;
         }
 
         public async Task<SystemCodeDetail> GetSystemCodeDetailByIdAsync(int systemCodeDetailId)
