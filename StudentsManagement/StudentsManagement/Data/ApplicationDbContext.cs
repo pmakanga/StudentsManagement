@@ -23,6 +23,7 @@ namespace StudentsManagement.Data
             builder.Entity<Country>().ToTable("tb_Countries");
             builder.Entity<SystemCode>().ToTable("tb_SystemCodes");
             builder.Entity<SystemCodeDetail>().ToTable("tb_SystemCodeDetails");
+            builder.Entity<Parent>().ToTable("tb_Parents");
 
         }
 
@@ -30,5 +31,6 @@ namespace StudentsManagement.Data
         public DbSet<Country> Countries { get; set; }
         public DbSet<SystemCode>SystemCodes { get; set; }
         public DbSet<SystemCodeDetail>SystemCodeDetails {  get; set; }
+        public DbSet<Parent> Parents { get; set; }
     }
 }

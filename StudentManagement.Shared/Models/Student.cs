@@ -26,5 +26,7 @@ namespace StudentsManagement.Shared.Models
 
         [Required]
         public string? Gender { get; set; }
+        [Required]
+        public DateTime DOB { get; set; }
     }
 }

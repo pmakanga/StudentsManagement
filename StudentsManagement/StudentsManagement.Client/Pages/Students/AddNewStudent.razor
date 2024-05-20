@@ -92,6 +92,13 @@
                             <ValidationMessage For="()=>StudentObj.Gender" />
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Date of Birth</label>
+                            <InputDate for="DOB" class="form-control" @bind-Value="@StudentObj.DOB" />
+                            <ValidationMessage For="()=>StudentObj.DOB" />
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group mt-4">
                     <button type="submit" class="btn btn-primary">Save</button>
