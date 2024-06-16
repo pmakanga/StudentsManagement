@@ -27,7 +27,6 @@ namespace StudentsManagement.Shared.Models
 
         public int GenderId { get; set; }
 
-        [Required]
         public SystemCodeDetail? Gender { get; set; }
 
         [Required]
@@ -38,7 +37,6 @@ namespace StudentsManagement.Shared.Models
 
         public Guid StudentId { get; set; }
 
-        
         public Student? Student { get; set; }
 
         public int ParentTypeId { get; set; }

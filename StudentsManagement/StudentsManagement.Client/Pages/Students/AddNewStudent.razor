@@ -1,7 +1,8 @@
 ﻿@page "/add-student"
 @page "/student/edit/{id}"
-@rendermode InteractiveServer
 @using StudentsManagement.Shared.Models
+
+@rendermode InteractiveServer
 @inject NavigationManager navigation
 
 <h3>@FormTitle</h3>
@@ -66,20 +67,20 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Country</label>
-                            <InputSelect for="Country" autocomplete="off" class="form-control" @bind-Value=@StudentObj.Country>
+                            <InputSelect for="Country" autocomplete="off" class="form-control" @bind-Value=@StudentObj.CountryId>
                                 <option value="">Select Country</option>
                                 @foreach (var country in Countries)
                                 {
-                                    <option value="@country.Name">@country.Name</option>
+                                    <option value="@country.Id">@country.Name</option>
                                 }
                             </InputSelect>
-                            <ValidationMessage For="()=>StudentObj.Country" />
+                            <ValidationMessage For="()=>StudentObj.CountryId" />
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Gender</label>
-                            <InputSelect for="GenderId" class="form-control" @bind-Value="@StudentObj.Gender">
+                            <InputSelect for="GenderId" class="form-control" @bind-Value="@StudentObj.GenderId">
                                 <option value="">Select Gender</option>
                                 @if (Gender != null && Gender.Any())
                                 {
@@ -89,7 +90,7 @@
                                     }
                                 }
                             </InputSelect>
-                            <ValidationMessage For="()=>StudentObj.Gender" />
+                            <ValidationMessage For="()=>StudentObj.GenderId" />
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -139,8 +140,11 @@
         }
     }
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
+        Countries = await CountryService.GetAllCountriesAsync();
+        Gender = await SystemCodeDetailsService.GetSystemCodeDetailByCodeAsync("Gender");
+        
         if (!string.IsNullOrEmpty(Id))
         {
             var _Id = new Guid(Id); // hapa ni very tricky, if the conversion from string to Guid is not done it becomes a big fuckin mess!
@@ -157,10 +161,10 @@
 
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        Countries = await CountryService.GetAllCountriesAsync();
-        Gender = await SystemCodeDetailsService.GetSystemCodeDetailByCodeAsync("Gender");
-    }
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     Countries = await CountryService.GetAllCountriesAsync();
+    //     Gender = await SystemCodeDetailsService.GetSystemCodeDetailByCodeAsync("Gender");
+    // }
 
 }

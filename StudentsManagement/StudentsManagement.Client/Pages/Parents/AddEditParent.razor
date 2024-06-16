@@ -1,0 +1,172 @@
+﻿@page "/add-parent"
+@page "/parent/edit/{id}"
+
+@rendermode InteractiveServer
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation
+
+<h3>@FormTitle</h3>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <EditForm Model="ParentObj" OnValidSubmit="HandleSave">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">First Name</label>
+                            <InputText for="First Name" autocomplete="off" class="form-control" @bind-Value=@ParentObj.FirstName />
+                            <ValidationMessage For="()=>ParentObj.FirstName" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Middle Name</label>
+                            <InputText for="Middle Name" autocomplete="off" class="form-control" @bind-Value=@ParentObj.MiddleName />
+                            <ValidationMessage For="()=>ParentObj.MiddleName" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Last Name</label>
+                            <InputText for="Last Name" autocomplete="off" class="form-control" @bind-Value=@ParentObj.LastName />
+                            <ValidationMessage For="()=>ParentObj.LastName" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Phone</label>
+                            <InputText for="Phone" autocomplete="off" class="form-control" @bind-Value=@ParentObj.PhoneNumber />
+                            <ValidationMessage For="()=>ParentObj.PhoneNumber" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Email</label>
+                            <InputText for="Email" autocomplete="off" class="form-control" @bind-Value=@ParentObj.EmailAddress />
+                            <ValidationMessage For="()=>ParentObj.EmailAddress" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Address</label>
+                            <InputText for="Address" autocomplete="off" class="form-control" @bind-Value=@ParentObj.Address />
+                            <ValidationMessage For="()=>ParentObj.Address" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Gender</label>
+                            <InputSelect for="GenderId" class="form-control" @bind-Value="@ParentObj.GenderId">
+                                <option value="">Select Gender</option>
+                                @if (Gender != null && Gender.Any())
+                                {
+                                    @foreach (var sex in Gender)
+                                    {
+                                        <option value="@sex.Id">@sex.Description</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="()=>ParentObj.GenderId" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Student</label>
+                            <InputSelect for="StudentId" class="form-control" @bind-Value="@ParentObj.StudentId">
+                                <option value="">Select Student</option>
+                                @foreach (var student in Students)
+                                {
+                                    <option value="@student.Id">@student.FullName</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="()=>ParentObj.StudentId" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Relationship Type</label>
+                            <InputSelect for="ParentTypeId" class="form-control" @bind-Value="@ParentObj.ParentTypeId">
+                                <option value="">Select Parent Type</option>
+                                @foreach (var type in ParentType)
+                                {
+                                    <option value="@type.Id">@type.Description</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="()=>ParentObj.ParentTypeId" />
+                        </div>
+                    </div>
+                   
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Date of Birth</label>
+                            <InputDate for="DOB" class="form-control" @bind-Value="@ParentObj.DOB" />
+                            <ValidationMessage For="()=>ParentObj.DOB" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a class="btn btn-danger " href="parents-list"><i class="oi oi-plus"></i>Back</a>
+                </div>
+
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    public Parent ParentObj { get; set; } = new();
+
+    public string FormTitle { get; set; } = string.Empty;
+
+    [Parameter] public string? Id { get; set; }
+
+    List<SystemCodeDetail> Gender = new List<SystemCodeDetail>();
+    List<SystemCodeDetail> ParentType = new List<SystemCodeDetail>();
+    List<Student> Students = new List<Student>();
+
+
+    private async Task HandleSave()
+    {
+        if (ParentObj.Id == Guid.Empty)
+        {
+            var result = await ParentService.AddParentAsync(ParentObj);
+            if (result != null)
+                navigation.NavigateTo("/parents-list");
+        }
+        else
+        {
+            var results = await ParentService.UpdateParentAsync(ParentObj);
+            if (results != null)
+                navigation.NavigateTo("/parents-list");
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            var _Id = new Guid(Id); // hapa ni very tricky, if the conversion from string to Guid is not done it becomes a big fuckin mess!
+
+            var parent = await ParentService.GetParentsByIdAsync(_Id);
+            if (parent != null)
+                ParentObj = parent;
+            FormTitle = "Edit Parent";
+        }
+        else
+        {
+            FormTitle = "Add Parent";
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Students = await StudentService.GetAllStudentsAsync();
+        Gender = await SystemCodeDetailsService.GetSystemCodeDetailByCodeAsync("Gender");
+        ParentType = await SystemCodeDetailsService.GetSystemCodeDetailByCodeAsync("ParentType");
+    }
+}
